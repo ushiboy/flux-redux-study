@@ -14,19 +14,20 @@
 
 ## ReactJS v15.0.x
 
+雑に変更点を振り返り。
+
 ### v0.13.x から v0.14.x への主な変更点
 
 * DOM関連の部分がreact-domに分離され、reactはコアになった。
 * refによる参照でDOM Nodeが取れるようになったので、React.findDOMNode(this.refs.author)しなくて良くなった。
-* 簡易なコンポーネント定義方法が追加された。
+* ステートレスなコンポーネントの簡易な定義方法が追加された。
 
 もっと詳しく知りたい方は[こちら](http://blog.koba04.com/post/2015/09/22/react-js-v014-changes/)などを参考に。
 
 ### v0.14.x から v15.0.x への主な変更点
 
-
+* バージョンがはじけ飛んだ。
 * data-reactidがなくなった。
-* 変数を文字列として埋め込んだときに入っていたspanがなくなった。
 
 もっと詳しく知りたい方は[こちら](http://blog.koba04.com/post/2016/03/09/react-js-v15-changes/)などを参考に。
 
@@ -91,6 +92,40 @@ class App extends React.Component {
     });
   }
 }
+
+render(
+  <App initialCount={0} />,
+  document.getElementById('app')
+);
+```
+
+## 発展
+
+### propまわりの定義を使う
+
+src/components/Counter.js
+```javascript
+import React from 'react';
+
+export default class Counter extends React.Component {
+  // 省略
+}
+Counter.propTypes = {
+  count: React.PropTypes.number.isRequired,
+  onClickPlus: React.PropTypes.func.isRequired,
+  onClickMinus: React.PropTypes.func.isRequired
+};
+```
+
+src/app-react.js
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+import Counter from './components/Counter';
+
+class App extends React.Component {
+  // 省略
+}
 App.propTypes = { initialCount: React.PropTypes.number };
 App.defaultProps = { initialCount: 0 };
 
@@ -99,3 +134,31 @@ render(
   document.getElementById('app')
 );
 ```
+
+### ステートレスなコンポーネント定義で書き換え
+
+src/components/Counter.js
+```javascript
+import React from 'react';
+
+export default function Counter(props) {
+  const { count, onClickPlus, onClickMinus } = props;
+  return (
+    <div>
+      <div>{count}</div>
+      <button onClick={onClickPlus}>+</button>
+      <button onClick={onClickMinus}>-</button>
+    </div>
+  );
+}
+Counter.propTypes = {
+  count: React.PropTypes.number.isRequired,
+  onClickPlus: React.PropTypes.func.isRequired,
+  onClickMinus: React.PropTypes.func.isRequired
+};
+```
+
+## 参考
+
+http://facebook.github.io/react/docs/reusable-components.html
+http://facebook.github.io/react/docs/reusable-components.html#stateless-functions
