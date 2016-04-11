@@ -14,6 +14,8 @@
 
 ## ReactJS v15.0.x
 
+雑に変更点を振り返り。
+
 ### v0.13.x から v0.14.x への主な変更点
 
 * DOM関連の部分がreact-domに分離され、reactはコアになった。
@@ -52,11 +54,6 @@ export default class Counter extends React.Component {
   }
 
 }
-Counter.propTypes = {
-  count: React.PropTypes.number.isRequired,
-  onClickPlus: React.PropTypes.func.isRequired,
-  onClickMinus: React.PropTypes.func.isRequired
-};
 ```
 
 src/app-react.js
@@ -95,6 +92,40 @@ class App extends React.Component {
     });
   }
 }
+
+render(
+  <App initialCount={0} />,
+  document.getElementById('app')
+);
+```
+
+## 発展
+
+### propまわりの定義を使う
+
+src/components/Counter.js
+```javascript
+import React from 'react';
+
+export default class Counter extends React.Component {
+  // 省略
+}
+Counter.propTypes = {
+  count: React.PropTypes.number.isRequired,
+  onClickPlus: React.PropTypes.func.isRequired,
+  onClickMinus: React.PropTypes.func.isRequired
+};
+```
+
+src/app-react.js
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+import Counter from './components/Counter';
+
+class App extends React.Component {
+  // 省略
+}
 App.propTypes = { initialCount: React.PropTypes.number };
 App.defaultProps = { initialCount: 0 };
 
@@ -104,7 +135,7 @@ render(
 );
 ```
 
-## 発展
+### ステートレスなコンポーネント定義で書き換え
 
 src/components/Counter.js
 ```javascript
