@@ -251,3 +251,78 @@ render(
   document.getElementById('app')
 );
 ```
+
+続いて"-"が押されたときのアクションを追加する
+
+### ActionCreator
+
+カウンターを増やすためのアクションを作成
+
+src/flux/ActionCreator.js
+```javascript
+import { COUNTER_UPDATE } from './constants';
+
+export default class ActionCreator {
+
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
+  }
+
+  plusCounter() {
+    this.dispatcher.dispatch({
+      type: COUNTER_UPDATE,
+      payload: {
+        value: 1
+      }
+    });
+  }
+
+  minusCounter() {
+    this.dispatcher.dispatch({
+      type: COUNTER_UPDATE,
+      payload: {
+        value: -1
+      }
+    });
+  }
+}
+```
+
+### Appにアクションを適用
+
+src/flux/App.js
+```javascript
+import React from 'react';
+import Counter from '../components/Counter';
+
+export default class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    const { store } = props;
+    this.state = { count: store.getCount() };
+    store.addListener(() => {
+      this.setState({
+        count: store.getCount()
+      });
+    });
+  }
+
+  render() {
+    const { count } = this.state;
+    return (
+      <Counter count={count}
+        onClickMinus={this.handleMinus.bind(this)}
+        onClickPlus={this.handlePlus.bind(this)} />
+    );
+  }
+
+  handlePlus() {
+    this.props.actions.plusCounter();
+  }
+
+  handleMinus() {
+
+  }
+}
+```
