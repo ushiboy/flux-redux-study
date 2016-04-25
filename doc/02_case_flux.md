@@ -12,6 +12,20 @@ Fluxの実装にはfacebookのfluxを利用するが、あくまでアーキテ�
 Counterコンポーネントは前回Reactによる実装で作成したCounterクラスを再利用する。
 
 
+## Fluxの登場人物
+
+![Fluxの登場人物](./images/flux-members.svg)
+
+### Action Creators
+
+### Dispatcher
+
+### Store
+
+### Controller View
+
+
+
 ## 実装（セットアップ的なところまで）
 
 ### Dispatcher
@@ -326,3 +340,8 @@ export default class App extends React.Component {
   }
 }
 ```
+
+## 参考
+
+* [漫画で説明するFlux](https://medium.com/@sotayamashita/%E6%BC%AB%E7%94%BB%E3%81%A7%E8%AA%AC%E6%98%8E%E3%81%99%E3%82%8B-flux-1a219e50232b#.emvji7i6p)
+* [10分で実装するFlux](http://azu.github.io/slide/react-meetup/flux.html)
