@@ -117,7 +117,7 @@ import { render } from 'react-dom';
 
 import { Dispatcher } from'flux';
 import CounterStore from './flux/CounterStore';
-import App from './flux.App';
+import App from './flux/App';
 
 const dispatcher = new Dispatcher();
 const store = new CounterStore(dispatcher);
@@ -173,7 +173,7 @@ export default class ActionCreator {
 
 Store側でアクションへの反応を実装
 
-src/flux/ActionCreator.js
+src/flux/CounterStore.js
 ```javascript
 import { Store } from 'flux/utils';
 import { COUNTER_UPDATE } from './constants';
@@ -270,7 +270,7 @@ render(
 
 ### ActionCreator
 
-カウンターを増やすためのアクションを作成
+カウンターを減らすためのアクションを作成
 
 src/flux/ActionCreator.js
 ```javascript
@@ -336,7 +336,7 @@ export default class App extends React.Component {
   }
 
   handleMinus() {
-
+    this.props.actions.minusCounter();
   }
 }
 ```

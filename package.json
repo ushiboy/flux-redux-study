@@ -21,6 +21,7 @@
     "gulp-livereload": "^3.8.1",
     "gulp-load-plugins": "^1.2.0",
     "gulp-util": "^3.0.7",
+    "http-proxy-middleware": "^0.14.0",
     "serve-static": "^1.10.2",
     "webpack": "^1.12.14"
   },
