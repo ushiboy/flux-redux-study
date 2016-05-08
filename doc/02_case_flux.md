@@ -80,9 +80,7 @@ export default class App extends React.Component {
     const { store } = props;
     this.state = store.getState();
     store.addListener(() => {
-      this.setState({
-        count: store.getCount()
-      });
+      this.setState(store.getState());
     });
   }
 
