@@ -32,19 +32,9 @@ Counterコンポーネントは前回Reactによる実装で作成したCounter�
 
 Dispatcherはfluxのものをそのまま利用する。
 
-src/app-flux.js
-```javascript
-import { Dispatcher } from'flux';
-
-const dispatcher = new Dispatcher();
-
-```
-
-
 ### Store
 
 アプリケーションの状態を持つStoreを作成する。
-
 
 src/flux/CounterStore.js
 ```javascript
@@ -57,8 +47,10 @@ export default class CounterStore extends Store {
     this._count = 0;
   }
 
-  getCount() {
-    return this._count;
+  getState() {
+    return {
+      count: this._count
+    };
   }
 
 }
@@ -78,7 +70,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     const { store } = props;
-    this.state = { count: store.getCount() };
+    this.state = store.getState();
     store.addListener(() => {
       this.setState({
         count: store.getCount()
@@ -141,7 +133,7 @@ render(
 
 src/flux/constants.js
 ```javascript
-export const COUNT_UPDATE = 'COUNT_UPDATE';
+export const UPDATE_COUNTER = 'UPDATE_COUNTER';
 ```
 
 ### ActionCreator
@@ -150,7 +142,7 @@ export const COUNT_UPDATE = 'COUNT_UPDATE';
 
 src/flux/ActionCreator.js
 ```javascript
-import { COUNTER_UPDATE } from './constants';
+import { UPDATE_COUNTER } from './constants';
 
 export default class ActionCreator {
 
@@ -160,7 +152,7 @@ export default class ActionCreator {
 
   plusCounter() {
     this.dispatcher.dispatch({
-      type: COUNTER_UPDATE,
+      type: UPDATE_COUNTER,
       payload: {
         value: 1
       }
@@ -176,7 +168,7 @@ Store側でアクションへの反応を実装
 src/flux/CounterStore.js
 ```javascript
 import { Store } from 'flux/utils';
-import { COUNTER_UPDATE } from './constants';
+import { UPDATE_COUNTER } from './constants';
 
 export default class CounterStore extends Store {
 
@@ -185,8 +177,10 @@ export default class CounterStore extends Store {
     this._count = 0;
   }
 
-  getCount() {
-    return this._count;
+  getState() {
+    return {
+      count: this._count
+    };
   }
 
   _updateCounter(payload) {
@@ -196,14 +190,14 @@ export default class CounterStore extends Store {
 
   __onDispatch(action) {
     switch (action.type) {
-      case COUNTER_UPDATE:
+      case UPDATE_COUNTER:
         this._updateCounter(action.payload);
         break;
     }
   }
+
 }
 ```
-
 
 ### Appにアクションを適用
 
@@ -217,11 +211,9 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     const { store } = props;
-    this.state = { count: store.getCount() };
+    this.state = store.getState();
     store.addListener(() => {
-      this.setState({
-        count: store.getCount()
-      });
+      this.setState(store.getState());
     });
   }
 
@@ -274,7 +266,7 @@ render(
 
 src/flux/ActionCreator.js
 ```javascript
-import { COUNTER_UPDATE } from './constants';
+import { UPDATE_COUNTER } from './constants';
 
 export default class ActionCreator {
 
@@ -284,7 +276,7 @@ export default class ActionCreator {
 
   plusCounter() {
     this.dispatcher.dispatch({
-      type: COUNTER_UPDATE,
+      type: UPDATE_COUNTER,
       payload: {
         value: 1
       }
@@ -293,7 +285,7 @@ export default class ActionCreator {
 
   minusCounter() {
     this.dispatcher.dispatch({
-      type: COUNTER_UPDATE,
+      type: UPDATE_COUNTER,
       payload: {
         value: -1
       }
@@ -314,11 +306,9 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     const { store } = props;
-    this.state = { count: store.getCount() };
+    this.state = store.getState();
     store.addListener(() => {
-      this.setState({
-        count: store.getCount()
-      });
+      this.setState(store.getState());
     });
   }
 
