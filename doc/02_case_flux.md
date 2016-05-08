@@ -331,6 +331,119 @@ export default class App extends React.Component {
 }
 ```
 
+## 非同期APIを入れた場合
+
+src/flux/ActionCreator.js
+```javascript
+import { UPDATE_COUNTER } from './constants';
+
+export default class ActionCreator {
+
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
+  }
+
+  fetchCount() {
+    fetch('/api/count')
+    .then(res => {
+      return res.json();
+    })
+    .then(json => {
+      this.dispatcher.dispatch({
+        type: UPDATE_COUNTER,
+        payload: json
+      });
+    });
+  }
+
+  plusCounter() {
+    fetch('/api/vote', {
+      method: 'POST'
+    })
+    .then(res => {
+      return res.json();
+    })
+    .then(json => {
+      this.dispatcher.dispatch({
+        type: UPDATE_COUNTER,
+        payload: json
+      });
+    });
+  }
+
+  minusCounter() {
+    fetch('/api/vote', {
+      method: 'DELETE'
+    })
+    .then(res => {
+      return res.json();
+    })
+    .then(json => {
+      this.dispatcher.dispatch({
+        type: UPDATE_COUNTER,
+        payload: json
+      });
+    });
+  }
+}
+```
+
+src/flux/CounterStore.js
+```javascript
+import { Store } from 'flux/utils';
+import { UPDATE_COUNTER } from './constants';
+
+export default class CounterStore extends Store {
+
+  constructor(dispatcher) {
+    super(dispatcher);
+    this._count = 0;
+  }
+
+  getState() {
+    return {
+      count: this._count
+    };
+  }
+
+  _updateCounter(payload) {
+    this._count = payload.count;
+    this.__emitChange();
+  }
+
+  __onDispatch(action) {
+    switch (action.type) {
+      case UPDATE_COUNTER:
+        this._updateCounter(action.payload);
+        break;
+    }
+  }
+
+}
+```
+
+src/app-flux.js
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+
+import { Dispatcher } from'flux';
+import CounterStore from './flux/CounterStore';
+import ActionCreator from './flux/ActionCreator';
+import App from './flux/App';
+
+const dispatcher = new Dispatcher();
+const store = new CounterStore(dispatcher);
+const actions = new ActionCreator(dispatcher);
+
+actions.fetchCount();
+
+render(
+  <App store={store} actions={actions} />,
+  document.getElementById('app')
+);
+```
+
 ## 参考
 
 * [漫画で説明するFlux](https://medium.com/@sotayamashita/%E6%BC%AB%E7%94%BB%E3%81%A7%E8%AA%AC%E6%98%8E%E3%81%99%E3%82%8B-flux-1a219e50232b#.emvji7i6p)
