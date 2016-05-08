@@ -18,12 +18,20 @@ Counterコンポーネントは前回Reactによる実装で作成したCounter�
 
 ### Action Creators
 
+アプリケーションの状態を変更するためのActionを作る。
+
 ### Dispatcher
+
+Actionを受け取ってStoreに配る。
 
 ### Store
 
+アプリケーションのすべての状態を保持し、ビジネスロジックを持つ。
+
+
 ### Controller View
 
+Storeの変更を受け取り内部のViewに渡す。
 
 
 ## 実装（セットアップ的なところまで）
@@ -446,5 +454,6 @@ render(
 
 ## 参考
 
+* [Immutable](https://facebook.github.io/react/docs/advanced-performance.html#immutable-js-to-the-rescue)
 * [漫画で説明するFlux](https://medium.com/@sotayamashita/%E6%BC%AB%E7%94%BB%E3%81%A7%E8%AA%AC%E6%98%8E%E3%81%99%E3%82%8B-flux-1a219e50232b#.emvji7i6p)
 * [10分で実装するFlux](http://azu.github.io/slide/react-meetup/flux.html)
