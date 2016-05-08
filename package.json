@@ -16,6 +16,7 @@
     "connect": "^3.4.1",
     "connect-livereload": "^0.5.4",
     "del": "^2.2.0",
+    "eslint": "^2.9.0",
     "eslint-plugin-react": "^4.3.0",
     "gulp": "^3.9.1",
     "gulp-livereload": "^3.8.1",
