@@ -16,9 +16,11 @@ Counterコンポーネントは前回Reactによる実装で作成したCounter�
 
 ![Fluxの登場人物](./images/flux-members.svg)
 
+
 ### Action Creators
 
 アプリケーションの状態を変更するためのActionを作る。
+Actionは識別子とStoreに渡すためのデータ。
 
 ### Dispatcher
 
@@ -452,6 +454,6 @@ render(
 
 ## 参考
 
-* [Immutable](https://facebook.github.io/react/docs/advanced-performance.html#immutable-js-to-the-rescue)
 * [漫画で説明するFlux](https://medium.com/@sotayamashita/%E6%BC%AB%E7%94%BB%E3%81%A7%E8%AA%AC%E6%98%8E%E3%81%99%E3%82%8B-flux-1a219e50232b#.emvji7i6p)
 * [10分で実装するFlux](http://azu.github.io/slide/react-meetup/flux.html)
+* [状態をImmutableにする話](https://facebook.github.io/react/docs/advanced-performance.html#immutable-js-to-the-rescue)
