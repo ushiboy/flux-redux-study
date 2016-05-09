@@ -16,15 +16,18 @@
     "connect": "^3.4.1",
     "connect-livereload": "^0.5.4",
     "del": "^2.2.0",
+    "eslint": "^2.9.0",
     "eslint-plugin-react": "^4.3.0",
     "gulp": "^3.9.1",
     "gulp-livereload": "^3.8.1",
     "gulp-load-plugins": "^1.2.0",
     "gulp-util": "^3.0.7",
+    "http-proxy-middleware": "^0.14.0",
     "serve-static": "^1.10.2",
     "webpack": "^1.12.14"
   },
   "dependencies": {
+    "flux": "^2.1.1",
     "react": "^15.0.0",
     "react-dom": "^15.0.0"
   }

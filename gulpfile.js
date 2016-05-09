@@ -7,10 +7,13 @@ var gulp = require('gulp')
 , connect = require('connect')
 , serveStatic = require('serve-static')
 , connectLiveReload = require('connect-livereload')
+, proxyMiddleware = require('http-proxy-middleware')
+, runApiServer = require('./fixture/api')
 , webpack = require('webpack')
 , bundler = webpack({
   entry: {
-    'app-react': './src/app-react.js'
+    'app-react': './src/app-react.js',
+    'app-flux': './src/app-flux.js'
   },
   devtool: 'inline-source-map',
   output: {
@@ -46,10 +49,18 @@ gulp.task('js:dev', cb => {
 
 gulp.task('serve', () => {
   var port = process.env.PORT || 3000;
+  runApiServer(3001);
+
   $.livereload.listen();
   connect()
   .use(connectLiveReload())
   .use(serveStatic(distDir))
+  .use(proxyMiddleware([
+    '/api'
+  ], {
+    target: 'http://localhost:' + 3001,
+    changeOrigin: true
+  }))
   .listen(port);
 });
 
