@@ -13,7 +13,8 @@ var gulp = require('gulp')
 , bundler = webpack({
   entry: {
     'app-react': './src/app-react.js',
-    'app-flux': './src/app-flux.js'
+    'app-flux': './src/app-flux.js',
+    'app-redux': './src/app-redux.js'
   },
   devtool: 'inline-source-map',
   output: {
