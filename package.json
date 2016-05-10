@@ -30,6 +30,8 @@
     "flux": "^2.1.1",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
-    "redux": "^3.5.2"
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.0.1"
   }
 }
