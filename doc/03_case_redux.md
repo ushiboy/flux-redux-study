@@ -273,8 +273,7 @@ import { count } from './redux/reducers';
 const combinedReducers = combineReducers({
   count
 });
-const createStoreWithMiddleware = applyMiddleware(thunkMiddleWare)(createStore);
-const store = createStoreWithMiddleware(combinedReducers);
+const store = createStore(combinedReducers, undefined, applyMiddleware(thunkMiddleWare));
 
 render(
   <Provider store={store}>
