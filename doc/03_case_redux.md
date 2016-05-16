@@ -4,9 +4,17 @@
 
 ReactによるカウンターアプリケーションをReduxを使って実装してみる。
 
-Fluxとの違いをざっと把握する。
+ReduxとFluxの違いをざっと把握する。
 
 CounterコンポーネントはReactによる実装で作成したCounterクラスを再利用する。
+
+## Reduxについて
+
+npmでの導入は次の通り。
+
+```
+$ npm install redux
+```
 
 ## Redux単体での動きを確認
 
@@ -17,7 +25,7 @@ $ cd /vagrant
 $ npm start
 ```
 
-src/app-redux.js の内容を見つつ、localhost:3000/index-redux.html を開いて動きを確認。
+src/app-redux.js の内容を見つつ、http://localhost:3000/index-redux.html を開いて動きを確認。
 
 ## Reduxの登場人物
 
@@ -25,23 +33,99 @@ src/app-redux.js の内容を見つつ、localhost:3000/index-redux.html を開�
 
 ## 実装
 
-src/redux/constants.js
-```javascript
-export const UPDATE_COUNTER = 'UPDATE_COUNTER';
+Reactと組み合わせて使うにはreduxコアの他にreact-reduxが必要。
+npmでの導入は次の通り。
 ```
+$ npm install react-redux
+```
+
+### 初期状態を描画するところまでの実装
+
+#### Reducer
+
+countに対して状態遷移を行うReducerを作成する。
 
 src/redux/reducers.js
 ```javascript
-import { UPDATE_COUNTER } from './constants';
-
 export function count(state = 0, action) {
   switch (action.type) {
-    case UPDATE_COUNTER:
-      return state += action.payload.value;
     default:
       return state;
   }
 }
+```
+
+#### Container
+
+src/redux/App.js
+```javascript
+import React from 'react';
+import { connect } from 'react-redux';
+
+import Counter from '../components/Counter';
+
+class App_ extends React.Component {
+
+  render() {
+    return (
+      <Counter count={this.props.count}
+        onClickMinus={this.handleMinus.bind(this)}
+        onClickPlus={this.handlePlus.bind(this)} />
+    );
+  }
+
+  handlePlus() {
+
+  }
+
+  handleMinus() {
+
+  }
+}
+
+function mapStateToProps(state) {
+  const { count } = state;
+  return { count };
+}
+
+const App = connect(mapStateToProps)(App_);
+
+export default App;
+```
+
+#### エントリポイント
+
+src/app-redux.js
+```javascript
+import React from 'react'
+import { render } from 'react-dom'
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
+
+import App from './redux/App';
+import { count } from './redux/reducers';
+
+const combinedReducers = combineReducers({
+  count
+});
+const store = createStore(combinedReducers);
+
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('app')
+);
+```
+
+これで、初期状態を表示するまでが完了
+
+
+### アクションの実装
+
+src/redux/constants.js
+```javascript
+export const UPDATE_COUNTER = 'UPDATE_COUNTER';
 ```
 
 src/redux/actions.js
@@ -67,24 +151,32 @@ export function minusCounter() {
 }
 ```
 
+src/redux/reducers.js
+```javascript
+import { UPDATE_COUNTER } from './constants';   // <- 追加
+
+export function count(state = 0, action) {
+  switch (action.type) {
+    case UPDATE_COUNTER:                        // <- 追加
+      return state += action.payload.value;     // <- 追加
+    default:
+      return state;
+  }
+}
+```
+
 src/redux/App.js
 ```javascript
 import React from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';     // <- 追加
 import { connect } from 'react-redux';
 
 import Counter from '../components/Counter';
-import { plusCounter, minusCounter } from './actions';
+import { plusCounter, minusCounter } from './actions';  // <- 追加
 
 class App_ extends React.Component {
 
-  render() {
-    return (
-      <Counter count={this.props.count}
-        onClickMinus={this.handleMinus.bind(this)}
-        onClickPlus={this.handlePlus.bind(this)} />
-    );
-  }
+  /** 省略 **/
 
   handlePlus() {
     this.props.actions.plusCounter();
@@ -95,12 +187,9 @@ class App_ extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  const { count } = state;
-  return { count };
-}
+/** 省略 **/
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {     // <- 追加
   return {
     actions: bindActionCreators({
       plusCounter,
@@ -109,35 +198,19 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const App = connect(mapStateToProps, mapDispatchToProps)(App_);
+const App = connect(mapStateToProps, mapDispatchToProps)(App_);     // <- mapDispatchToPropsを追加
 
 export default App;
 ```
 
-src/app-redux.js
-```javascript
-import React from 'react'
-import { render } from 'react-dom'
-import { createStore, combineReducers } from 'redux';
-import { Provider } from 'react-redux';
-
-import App from './redux/App';
-import { count } from './redux/reducers';
-
-const combinedReducers = combineReducers({
-  count
-});
-const store = createStore(combinedReducers);
-
-render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('app')
-);
-```
 
 ## 非同期API
+
+reduxコアでは非同期なアクションの取り扱いができないので、redux-thunkミドルウェアが必要。
+npmでの導入は次の通り。
+```
+$ npm install redux-thunk
+```
 
 src/redux/actions.js
 ```javascript
@@ -200,7 +273,7 @@ import { UPDATE_COUNTER } from './constants';
 export function count(state = 0, action) {
   switch (action.type) {
     case UPDATE_COUNTER:
-      return state = action.payload.count;
+      return state = action.payload.count;      // <- 修正
     default:
       return state;
   }
@@ -214,40 +287,23 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Counter from '../components/Counter';
-import { plusCounter, minusCounter, fetchCount } from './actions';
+import { plusCounter, minusCounter, fetchCount } from './actions';  // <- 修正
 
 class App_ extends React.Component {
 
-  componentDidMount() {
+  componentDidMount() {                     // <- 追加
     this.props.actions.fetchCount();
   }
 
-  render() {
-    return (
-      <Counter count={this.props.count}
-        onClickMinus={this.handleMinus.bind(this)}
-        onClickPlus={this.handlePlus.bind(this)} />
-    );
-  }
-
-  handlePlus() {
-    this.props.actions.plusCounter();
-  }
-
-  handleMinus() {
-    this.props.actions.minusCounter();
-  }
+  /** 省略 **/
 }
 
-function mapStateToProps(state) {
-  const { count } = state;
-  return { count };
-}
+/** 省略 **/
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
-      fetchCount,
+      fetchCount,                           // <- 追加
       plusCounter,
       minusCounter
     }, dispatch)
@@ -263,9 +319,9 @@ src/redux/app-redux.js
 ```javascript
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';      // <- 修正
 import { Provider } from 'react-redux';
-import thunkMiddleWare from 'redux-thunk';
+import thunk from 'redux-thunk';                                  // <- 追加
 
 import App from './redux/App';
 import { count } from './redux/reducers';
@@ -273,8 +329,7 @@ import { count } from './redux/reducers';
 const combinedReducers = combineReducers({
   count
 });
-const createStoreWithMiddleware = applyMiddleware(thunkMiddleWare)(createStore);
-const store = createStoreWithMiddleware(combinedReducers);
+const store = createStore(combinedReducers, undefined, applyMiddleware(thunk));   // <- 修正
 
 render(
   <Provider store={store}>
