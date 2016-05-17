@@ -12,6 +12,8 @@ CounterコンポーネントはReactによる実装で作成したCounterクラ�
 
 ### Reduxとは
 
+[公式](http://redux.js.org/)
+
 予測可能な状態変化を扱うためのライブラリ。
 Fluxアーキテクチャから派生。
 
@@ -77,6 +79,8 @@ export function count(state = 0, action) {
 
 #### Container
 
+Reduxの状態を表示するためのReactコンポーネント。
+
 src/redux/App.js
 ```javascript
 import React from 'react';
@@ -113,7 +117,12 @@ const App = connect(mapStateToProps)(App_);
 export default App;
 ```
 
+mapStateToPropsはContainerがReduxから受け取るprops（Redux側のstateから取り出す）を決めるためのハンドラ。
+
 #### エントリポイント
+
+combinedReducersでまとめたReducerを使ってcreateStoreでStoreを作る。
+ContainerはProviderの子コンポーネントとして使う。
 
 src/app-redux.js
 ```javascript
@@ -143,10 +152,14 @@ render(
 
 ### アクションの実装
 
+#### アクション識別子を定数として用意
+
 src/redux/constants.js
 ```javascript
 export const UPDATE_COUNTER = 'UPDATE_COUNTER';
 ```
+
+#### アクションを用意
 
 src/redux/actions.js
 ```javascript
@@ -171,6 +184,8 @@ export function minusCounter() {
 }
 ```
 
+#### Reducerにアクションの反応を追加
+
 src/redux/reducers.js
 ```javascript
 import { UPDATE_COUNTER } from './constants';   // <- 追加
@@ -184,6 +199,8 @@ export function count(state = 0, action) {
   }
 }
 ```
+
+#### Containerにアクションを適用
 
 src/redux/App.js
 ```javascript
@@ -222,6 +239,11 @@ const App = connect(mapStateToProps, mapDispatchToProps)(App_);     // <- mapDis
 
 export default App;
 ```
+
+mapDispatchToPropsはContainerが利用できるアクションを設定するためのハンドラ。
+bindActionCreatorsでdispatchメソッドと合成されたアクションを使える。
+
+これでアクションを実行して状態を変更、描画するまでが完成。
 
 
 ## 非同期API
