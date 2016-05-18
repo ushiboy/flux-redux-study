@@ -6,7 +6,7 @@
 
 * [Reactの復習](./doc/01_case_react.md)
 * [Flux](./doc/02_case_flux.md)
-* Redux
+* [Redux](./doc/03_case_redux.md)
 
 ## 作業環境
 
