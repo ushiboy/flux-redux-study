@@ -19,15 +19,15 @@ Fluxアーキテクチャから派生。
 
 ### Reduxの3原則
 
-1. Single source of truth
+#### 1. Single source of truth
 
 アプリケーション全体の状態は、1 つのStore内のオブジェクト ツリーに格納される。
 
-2. State is read-only
+#### 2. State is read-only
 
 状態を変更させる唯一の方法はアクションの内容を表すオブジェクトを生成すること。
 
-3. Changes are made with pure functions
+#### 3. Changes are made with pure functions
 
 アクションによる状態木の遷移方法として、reducerは純粋関数として記述する。
 (以前の状態とアクションを受け取って次の状態を返すだけ)
